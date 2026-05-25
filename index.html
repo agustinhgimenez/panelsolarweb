@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Optoelectrónica - Monitor Panel Solar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <circle cx="12" cy="12" r="10" fill="#2563eb" opacity="0.12"/>
+          <path d="M12 6v6l4 2" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="titles">
+          <h1>Seguidor Solar</h1>
+          <div class="subtitle">Monitor</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="grid">
+      <div class="card metrics full-width">
+        <h2>Lecturas</h2>
+        <div class="grid-cols">
+          <div class="metric"><div class="label">LDR NW</div><div id="ldr_nw" class="value">—</div></div>
+          <div class="metric"><div class="label">LDR NE</div><div id="ldr_ne" class="value">—</div></div>
+          <div class="metric"><div class="label">LDR SW</div><div id="ldr_sw" class="value">—</div></div>
+          <div class="metric"><div class="label">LDR SE</div><div id="ldr_se" class="value">—</div></div>
+          <div class="metric"><div class="label">Error H</div><div id="error_h" class="value">—</div></div>
+          <div class="metric"><div class="label">Servo (°)</div><div id="servo" class="value">—</div></div>
+          <div class="metric"><div class="label">Vpanel (V)</div><div id="vpanel" class="value">—</div></div>
+          <div class="metric"><div class="label">Vbat (V)</div><div id="vbat" class="value">—</div></div>
+          <div class="metric"><div class="label">Corriente (A)</div><div id="current" class="value">—</div></div>
+          <div class="metric"><div class="label">Potencia (W)</div><div id="power" class="value">—</div></div>
+          <div class="metric"><div class="label">Irradiancia (W/m²)</div><div id="irradiance" class="value">—</div></div>
+          <div class="metric"><div class="label">SOC (%)</div><div id="soc" class="value">—</div></div>
+          <div class="metric full"><div class="label">Cargando</div><div id="charging" class="value">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <small>&nbsp;</small>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
