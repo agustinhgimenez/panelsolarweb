@@ -29,6 +29,14 @@ async function actualizarDatos() {
         setText("power", parseFloat(data.power).toFixed(4) + " W");
         setText("irradiance", parseFloat(data.irradiance).toFixed(1) + " W/m²");
 
+        if (data.servo_angle !== undefined && data.servo_angle !== null && data.servo_angle !== "") {
+            setText("servo", parseFloat(data.servo_angle).toFixed(0) + " °");
+        }
+
+        if (data.error_h !== undefined && data.error_h !== null && data.error_h !== "") {
+            setText("error_h", parseFloat(data.error_h).toFixed(3) + " V");
+        }
+
         if (Array.isArray(data.ldr_voltage) && data.ldr_voltage.length >= 4) {
             setText("ldr_nw", formatVoltage(data.ldr_voltage[0]));
             setText("ldr_ne", formatVoltage(data.ldr_voltage[1]));

@@ -84,6 +84,8 @@ $ultimo = [
     "irradiance" => $data['irradiance'],
     "ldr_raw"    => $data['ldr_raw'],
     "ldr_voltage"=> $data['ldr_voltage'],
+    "servo_angle"=> $data['servo_angle'] ?? null,
+    "error_h"    => $data['error_h'] ?? null,
 ];
 file_put_contents($archivo_ultimo, json_encode($ultimo, JSON_PRETTY_PRINT));
 
