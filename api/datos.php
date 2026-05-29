@@ -34,7 +34,7 @@ if ($data === null) {
     exit;
 }
 
-$campos_requeridos = ['current', 'voltage', 'power', 'irradiance'];
+$campos_requeridos = ['current', 'voltage', 'power', 'irradiance', 'ldr_raw', 'ldr_voltage'];
 foreach ($campos_requeridos as $campo) {
     if (!isset($data[$campo])) {
         http_response_code(400);
@@ -43,16 +43,49 @@ foreach ($campos_requeridos as $campo) {
     }
 }
 
+if (!is_array($data['ldr_raw']) || count($data['ldr_raw']) !== 4) {
+    http_response_code(400);
+    echo json_encode(["error" => "ldr_raw debe ser un array de 4 valores"]);
+    exit;
+}
+
+if (!is_array($data['ldr_voltage']) || count($data['ldr_voltage']) !== 4) {
+    http_response_code(400);
+    echo json_encode(["error" => "ldr_voltage debe ser un array de 4 valores"]);
+    exit;
+}
+
 $archivo_csv = __DIR__ . '/datos_panel.csv';
+$archivo_ultimo = __DIR__ . '/ultimo.json';
 $timestamp = date('Y-m-d H:i:s');
-$linea = "$timestamp," . $data['current'] . "," . $data['voltage'] . "," . $data['power'] . "," . $data['irradiance'] . "\n";
+
+$linea = $timestamp . "," .
+    $data['current'] . "," .
+    $data['voltage'] . "," .
+    $data['power'] . "," .
+    $data['irradiance'] . "," .
+    implode(',', $data['ldr_raw']) . "," .
+    implode(',', $data['ldr_voltage']) . "\n";
 
 if (!file_exists($archivo_csv)) {
-    $header = "Timestamp,Corriente (A),Voltaje (V),Potencia (W),Irradiancia (W/m2)\n";
+    $header = "Timestamp,Corriente (A),Voltaje (V),Potencia (W),Irradiancia (W/m2)," .
+              "LDR1 raw,LDR2 raw,LDR3 raw,LDR4 raw," .
+              "LDR1 V,LDR2 V,LDR3 V,LDR4 V\n";
     file_put_contents($archivo_csv, $header);
 }
 
 file_put_contents($archivo_csv, $linea, FILE_APPEND);
+
+$ultimo = [
+    "timestamp"  => $timestamp,
+    "current"    => $data['current'],
+    "voltage"    => $data['voltage'],
+    "power"      => $data['power'],
+    "irradiance" => $data['irradiance'],
+    "ldr_raw"    => $data['ldr_raw'],
+    "ldr_voltage"=> $data['ldr_voltage'],
+];
+file_put_contents($archivo_ultimo, json_encode($ultimo, JSON_PRETTY_PRINT));
 
 http_response_code(200);
 echo json_encode([
