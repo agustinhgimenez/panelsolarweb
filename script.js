@@ -30,13 +30,23 @@ async function actualizarDatos() {
         setText("irradiance", parseFloat(data.irradiance).toFixed(1) + " W/m²");
 
         setText("servo",
-            data.servo_angle !== undefined && data.servo_angle !== null && data.servo_angle !== ""
+            data.servo_angle != null && data.servo_angle !== ""
                 ? parseFloat(data.servo_angle).toFixed(0) + " °"
                 : "—");
 
+        setText("servo_v",
+            data.servo_angle_v != null && data.servo_angle_v !== ""
+                ? parseFloat(data.servo_angle_v).toFixed(0) + " °"
+                : "—");
+
         setText("error_h",
-            data.error_h !== undefined && data.error_h !== null && data.error_h !== ""
+            data.error_h != null && data.error_h !== ""
                 ? parseFloat(data.error_h).toFixed(3) + " V"
+                : "—");
+
+        setText("error_v",
+            data.error_v != null && data.error_v !== ""
+                ? parseFloat(data.error_v).toFixed(3) + " V"
                 : "—");
 
         if (Array.isArray(data.ldr_voltage) && data.ldr_voltage.length >= 4) {
