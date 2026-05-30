@@ -8,8 +8,6 @@ if (file_exists($archivo_ultimo)) {
     if ($data !== null) {
         if (!isset($data['servo_angle'])) $data['servo_angle'] = 90;
         if (!isset($data['servo_angle_v'])) $data['servo_angle_v'] = 90;
-        if (!isset($data['error_h'])) $data['error_h'] = 0;
-        if (!isset($data['error_v'])) $data['error_v'] = 0;
         echo json_encode($data);
         exit;
     }
@@ -39,8 +37,6 @@ $response = [
     "irradiance"    => $ultima[4],
     "servo_angle"   => 90,
     "servo_angle_v" => 90,
-    "error_h"       => 0,
-    "error_v"       => 0,
 ];
 
 if (count($ultima) >= 13) {
@@ -49,11 +45,11 @@ if (count($ultima) >= 13) {
 }
 if (count($ultima) >= 15) {
     $response["servo_angle"] = $ultima[13];
-    $response["error_h"] = $ultima[14];
-}
-if (count($ultima) >= 17) {
+    $response["servo_angle_v"] = $ultima[14];
+} elseif (count($ultima) >= 17) {
+    // CSV antiguo con columnas de error
+    $response["servo_angle"] = $ultima[13];
     $response["servo_angle_v"] = $ultima[15];
-    $response["error_v"] = $ultima[16];
 }
 
 echo json_encode($response);

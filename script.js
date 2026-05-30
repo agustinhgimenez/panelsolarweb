@@ -39,16 +39,6 @@ async function actualizarDatos() {
                 ? parseFloat(data.servo_angle_v).toFixed(0) + " °"
                 : "—");
 
-        setText("error_h",
-            data.error_h != null && data.error_h !== ""
-                ? parseFloat(data.error_h).toFixed(3) + " V"
-                : "—");
-
-        setText("error_v",
-            data.error_v != null && data.error_v !== ""
-                ? parseFloat(data.error_v).toFixed(3) + " V"
-                : "—");
-
         if (Array.isArray(data.ldr_voltage) && data.ldr_voltage.length >= 4) {
             setText("ldr_nw", formatVoltage(data.ldr_voltage[0]));
             setText("ldr_ne", formatVoltage(data.ldr_voltage[1]));
