@@ -6,6 +6,12 @@ $archivo_ultimo = __DIR__ . '/ultimo.json';
 if (file_exists($archivo_ultimo)) {
     $data = json_decode(file_get_contents($archivo_ultimo), true);
     if ($data !== null) {
+        if (!isset($data['servo_angle'])) {
+            $data['servo_angle'] = 90;
+        }
+        if (!isset($data['error_h'])) {
+            $data['error_h'] = 0;
+        }
         echo json_encode($data);
         exit;
     }
@@ -28,11 +34,13 @@ if (count($lineas) <= 1) {
 $ultima = explode(",", trim(end($lineas)));
 
 $response = [
-    "timestamp"  => $ultima[0],
-    "current"    => $ultima[1],
-    "voltage"    => $ultima[2],
-    "power"      => $ultima[3],
-    "irradiance" => $ultima[4],
+    "timestamp"   => $ultima[0],
+    "current"     => $ultima[1],
+    "voltage"     => $ultima[2],
+    "power"       => $ultima[3],
+    "irradiance"  => $ultima[4],
+    "servo_angle" => 90,
+    "error_h"     => 0,
 ];
 
 if (count($ultima) >= 13) {
@@ -42,6 +50,11 @@ if (count($ultima) >= 13) {
     $response["ldr_voltage"] = [
         $ultima[9], $ultima[10], $ultima[11], $ultima[12]
     ];
+}
+
+if (count($ultima) >= 15) {
+    $response["servo_angle"] = $ultima[13];
+    $response["error_h"] = $ultima[14];
 }
 
 echo json_encode($response);
