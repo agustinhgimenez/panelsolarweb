@@ -57,6 +57,9 @@ if (!is_array($data['ldr_voltage']) || count($data['ldr_voltage']) !== 4) {
 
 $servo_angle   = isset($data['servo_angle']) ? $data['servo_angle'] : 90;
 $servo_angle_v = isset($data['servo_angle_v']) ? $data['servo_angle_v'] : 90;
+$lux               = isset($data['lux']) ? $data['lux'] : 0;
+$irradiance_lux    = isset($data['irradiance_lux']) ? $data['irradiance_lux'] : 0;
+$irradiance_ldr    = isset($data['irradiance_ldr']) ? $data['irradiance_ldr'] : 0;
 
 $archivo_csv = __DIR__ . '/datos_panel.csv';
 $archivo_ultimo = __DIR__ . '/ultimo.json';
@@ -70,13 +73,16 @@ $linea = $timestamp . "," .
     implode(',', $data['ldr_raw']) . "," .
     implode(',', $data['ldr_voltage']) . "," .
     $servo_angle . "," .
-    $servo_angle_v . "\n";
+    $servo_angle_v . "," .
+    $lux . "," .
+    $irradiance_lux . "," .
+    $irradiance_ldr . "\n";
 
 if (!file_exists($archivo_csv)) {
-    $header = "Timestamp,Corriente (A),Voltaje (V),Potencia (W),Irradiancia (W/m2)," .
+    $header = "Timestamp,Corriente (A),Voltaje (V),Potencia (W),Irradiancia panel (W/m2)," .
               "LDR1 raw,LDR2 raw,LDR3 raw,LDR4 raw," .
               "LDR1 V,LDR2 V,LDR3 V,LDR4 V," .
-              "Servo H (deg),Servo V (deg)\n";
+              "Servo H (deg),Servo V (deg),Lux (lx),Irradiancia lux (W/m2),Irradiancia LDR (W/m2)\n";
     file_put_contents($archivo_csv, $header);
 }
 
@@ -92,6 +98,9 @@ $ultimo = [
     "ldr_voltage"   => $data['ldr_voltage'],
     "servo_angle"   => $servo_angle,
     "servo_angle_v" => $servo_angle_v,
+    "lux"           => $lux,
+    "irradiance_lux" => $irradiance_lux,
+    "irradiance_ldr" => $irradiance_ldr,
 ];
 file_put_contents($archivo_ultimo, json_encode($ultimo, JSON_PRETTY_PRINT));
 

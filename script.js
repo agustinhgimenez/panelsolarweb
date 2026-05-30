@@ -27,6 +27,22 @@ async function actualizarDatos() {
         setText("current", parseFloat(data.current).toFixed(3) + " A");
         setText("vpanel", parseFloat(data.voltage).toFixed(3) + " V");
         setText("power", parseFloat(data.power).toFixed(4) + " W");
+
+        setText("lux",
+            data.lux != null && data.lux !== ""
+                ? parseFloat(data.lux).toFixed(1) + " lx"
+                : "—");
+
+        setText("irradiance_lux",
+            data.irradiance_lux != null && data.irradiance_lux !== ""
+                ? parseFloat(data.irradiance_lux).toFixed(1) + " W/m²"
+                : "—");
+
+        setText("irradiance_ldr",
+            data.irradiance_ldr != null && data.irradiance_ldr !== ""
+                ? parseFloat(data.irradiance_ldr).toFixed(1) + " W/m²"
+                : "—");
+
         setText("irradiance", parseFloat(data.irradiance).toFixed(1) + " W/m²");
 
         setText("servo",
