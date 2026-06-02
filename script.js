@@ -18,23 +18,11 @@ function formatVoltage(value) {
 
 
 
-const IRR_REF_WM2 = 1000;
-
 const LDR_V_OSCURAS = 3.05;
 
 const LDR_V_PLENO_SOL = 3.30;
 
 const LDR_GAMMA = 0.85;
-
-
-
-function irradianciaAPorcentaje(wm2) {
-
-    const pct = (parseFloat(wm2) / IRR_REF_WM2) * 100;
-
-    return Math.min(100, Math.max(0, pct));
-
-}
 
 
 
@@ -144,7 +132,7 @@ async function actualizarDatos() {
 
             data.irradiance != null
 
-                ? irradianciaAPorcentaje(data.irradiance).toFixed(0) + " %"
+                ? parseFloat(data.irradiance).toFixed(1) + " W/m²"
 
                 : "—");
 
