@@ -75,4 +75,4 @@ async function actualizarDatos() {
 }
 
 actualizarDatos();
-setInterval(actualizarDatos, 2000);
+setInterval(actualizarDatos, 1000);
