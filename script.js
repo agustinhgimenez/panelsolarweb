@@ -20,6 +20,12 @@ function formatVoltage(value) {
 
 const IRR_REF_WM2 = 1000;
 
+const LDR_V_OSCURAS = 3.05;
+
+const LDR_V_PLENO_SOL = 3.30;
+
+const LDR_GAMMA = 0.85;
+
 
 
 function irradianciaAPorcentaje(wm2) {
@@ -27,6 +33,24 @@ function irradianciaAPorcentaje(wm2) {
     const pct = (parseFloat(wm2) / IRR_REF_WM2) * 100;
 
     return Math.min(100, Math.max(0, pct));
+
+}
+
+
+
+function luzLdrPctDesdeVoltajes(voltages) {
+
+    const vProm = voltages.reduce((s, v) => s + parseFloat(v), 0) / voltages.length;
+
+    if (vProm <= LDR_V_OSCURAS) return 0;
+
+    const span = Math.max(0.05, LDR_V_PLENO_SOL - LDR_V_OSCURAS);
+
+    let norm = (vProm - LDR_V_OSCURAS) / span;
+
+    norm = Math.min(1, Math.max(0, norm));
+
+    return Math.min(100, Math.max(0, Math.pow(norm, LDR_GAMMA) * 100));
 
 }
 
@@ -54,11 +78,21 @@ async function actualizarDatos() {
 
         // Columna LDR
 
-        const luzPct = data.ldr_light_pct ?? data.irradiance_ldr;
+        let luzPct = null;
+
+        if (Array.isArray(data.ldr_voltage) && data.ldr_voltage.length >= 4) {
+
+            luzPct = luzLdrPctDesdeVoltajes(data.ldr_voltage);
+
+        } else if (data.ldr_light_pct != null) {
+
+            luzPct = Math.min(100, Math.max(0, parseFloat(data.ldr_light_pct)));
+
+        }
 
         setText("ldr_light_pct",
 
-            luzPct != null ? parseFloat(luzPct).toFixed(0) + " %" : "—");
+            luzPct != null ? luzPct.toFixed(0) + " %" : "—");
 
         setText("servo",
 
@@ -114,13 +148,7 @@ async function actualizarDatos() {
 
                 : "—");
 
-        setText("panel_adc", data.panel_adc != null ? String(data.panel_adc) : "—");
-
         setText("v_adc", data.v_adc != null ? parseFloat(data.v_adc).toFixed(3) + " V" : "—");
-
-        setText("acs_v", data.acs_v != null ? parseFloat(data.acs_v).toFixed(3) + " V" : "—");
-
-
 
         const alerta = document.getElementById("panel_alerta");
 
