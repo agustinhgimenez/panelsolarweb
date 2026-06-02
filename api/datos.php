@@ -34,6 +34,17 @@ foreach (['current', 'voltage', 'power', 'irradiance', 'ldr_raw', 'ldr_voltage']
     }
 }
 
+if (!is_array($data['ldr_raw']) || count($data['ldr_raw']) !== 4) {
+    http_response_code(400);
+    echo json_encode(["error" => "ldr_raw debe tener 4 valores"]);
+    exit;
+}
+if (!is_array($data['ldr_voltage']) || count($data['ldr_voltage']) !== 4) {
+    http_response_code(400);
+    echo json_encode(["error" => "ldr_voltage debe tener 4 valores"]);
+    exit;
+}
+
 $servo_angle    = $data['servo_angle'] ?? 90;
 $servo_angle_v  = $data['servo_angle_v'] ?? 90;
 $irradiance_ldr = $data['irradiance_ldr'] ?? 0;
@@ -54,7 +65,7 @@ if (!file_exists($archivo_csv)) {
     file_put_contents($archivo_csv,
         "Timestamp,I,V,P,Irr panel,LDR1r,LDR2r,LDR3r,LDR4r,LDR1v,LDR2v,LDR3v,LDR4v,ServoH,ServoV,IrrLDR,ADC36,Vadc36,ACSv\n");
 }
-file_put_contents($archivo_csv, $linea, FILE_APPEND);
+file_put_contents($archivo_csv, $linea, FILE_APPEND | LOCK_EX);
 
 $ultimo = [
     "timestamp" => $timestamp,
@@ -72,8 +83,21 @@ $ultimo = [
     "servo_angle" => $servo_angle,
     "servo_angle_v" => $servo_angle_v,
 ];
-file_put_contents($archivo_ultimo, json_encode($ultimo, JSON_PRETTY_PRINT));
 
-echo json_encode(["success" => true, "timestamp" => $timestamp, "data" => $ultimo]);
+$json = json_encode($ultimo, JSON_PRETTY_PRINT);
+$ok = file_put_contents($archivo_ultimo, $json, LOCK_EX);
+
+if ($ok === false) {
+    http_response_code(500);
+    echo json_encode([
+        "error" => "No se pudo guardar ultimo.json",
+        "path" => $archivo_ultimo,
+        "hint" => "chmod 775 api/ en el servidor",
+    ]);
+    exit;
+}
+
+http_response_code(200);
+echo json_encode(["success" => true, "timestamp" => $timestamp, "saved" => $archivo_ultimo, "data" => $ultimo]);
 ?>
 
